@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acerca de — AeroMexa</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="nav-logo-img">
+      <span class="nav-logo-text">Aero<span>Mexa</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="dashboard.html">Inicio</a></li>
+      <li><a href="search.html">Búsqueda</a></li>
+      <li><a href="products.html">Productos</a></li>
+      <li><a href="about.html" class="active">Acerca de</a></li>
+      <li><button onclick="logout()">Salir</button></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="about-hero">
+    <div class="about-hero-photo"></div>
+    <div class="about-hero-body">
+      <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="about-hero-logo">
+      <h1>Sobre <em>Aero</em>Mexa</h1>
+      <p>Conectando a México con el mundo desde 2019 ✈</p>
+    </div>
+  </section>
+
+  <!-- HISTORIA -->
+  <div class="about-grid">
+    <div class="about-txt">
+      <p class="section-tag">QUIÉNES SOMOS</p>
+      <h2>Más que vuelos,<br><em>experiencias</em></h2>
+      <p>AeroMexa nació en Ciudad Juárez, Chihuahua, con la misión de democratizar el acceso a vuelos de calidad para todos los mexicanos. Desde nuestra ciudad fronteriza, conectamos al norte del país con los principales destinos nacionales e internacionales.</p>
+      <p>Hoy operamos más de 50 rutas con una plataforma 100% digital — rápida, segura y disponible desde cualquier dispositivo.</p>
+      <div class="about-stats">
+        <div class="about-stat"><strong>50+</strong><span>Rutas</span></div>
+        <div class="about-stat"><strong>10K+</strong><span>Viajeros</span></div>
+        <div class="about-stat"><strong>7 años</strong><span>Experiencia</span></div>
+      </div>
+    </div>
+    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800" alt="AeroMexa" class="about-img">
+  </div>
+
+  <!-- VALORES -->
+  <section class="values-band">
+    <div class="values-inner">
+      <div style="text-align:center">
+        <p class="section-tag">NUESTROS VALORES</p>
+        <h2 class="section-title">Lo que nos <span>define</span></h2>
+      </div>
+      <div class="values-grid">
+        <div class="val-card"><div class="val-icon">🛡</div><h3>Seguridad</h3><p>La seguridad de nuestros pasajeros es nuestra prioridad en cada vuelo y cada transacción.</p></div>
+        <div class="val-card"><div class="val-icon">💎</div><h3>Calidad</h3><p>Estándares internacionales de servicio en cada punto de contacto con el cliente.</p></div>
+        <div class="val-card"><div class="val-icon">🤝</div><h3>Confianza</h3><p>Precios transparentes, sin cargos ocultos y comunicación honesta siempre.</p></div>
+        <div class="val-card"><div class="val-icon">♻</div><h3>Sustentabilidad</h3><p>Comprometidos con reducir nuestra huella de carbono y volar responsablemente.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPO -->
+  <section class="team-section">
+    <div style="text-align:center; margin-bottom:2.5rem;">
+      <p class="section-tag">NUESTRO EQUIPO</p>
+      <h2 class="section-title">Las personas detrás de <span>AeroMexa</span></h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-av" style="background:linear-gradient(135deg,#c0392b,#e74c3c)">AR</div>
+        <h3>Ambar Ronquillo</h3>
+        <p class="team-role">CEO & Co-fundadora</p>
+        <p class="team-bio">Visionaria del turismo digital en la frontera norte de México.</p>
+        <div class="team-social"><a href="#">in</a><a href="#">tw</a></div>
+      </div>
+      <div class="team-card">
+        <div class="team-av" style="background:linear-gradient(135deg,#27ae60,#2ecc71)">AV</div>
+        <h3>Ángel Villa</h3>
+        <p class="team-role">Director de Operaciones</p>
+        <p class="team-bio">Experto en logística aérea y experiencia del pasajero.</p>
+        <div class="team-social"><a href="#">in</a><a href="#">tw</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section">
+    <div class="contact-grid">
+
+      <div class="contact-info">
+        <p class="section-tag">CONTACTO</p>
+        <h2>Estamos aquí <em>para ti</em></h2>
+        <p class="contact-intro">¿Tienes preguntas, necesitas cambiar un vuelo o quieres conocer más? Nuestro equipo está disponible las 24 horas.</p>
+
+        <div class="contact-items">
+          <div class="ci">
+            <div class="ci-icon">📍</div>
+            <div>
+              <strong>Oficinas centrales</strong>
+              <p>Av. Universidad Tecnologica UTCJ 3506<br>Ciudad Juárez, Chihuahua, México</p>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon">📞</div>
+            <div>
+              <strong>Teléfono</strong>
+              <p>+52 (656) 123-4567<br><span style="font-size:0.78rem;color:var(--gray-mid)">Lunes a Domingo, 24 horas</span></p>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon">📧</div>
+            <div>
+              <strong>Correo electrónico</strong>
+              <p>info@aeromexa.mx<br>soporte@aeromexa.mx</p>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon">💬</div>
+            <div>
+              <strong>Redes sociales</strong>
+              <p>@AeroMexa en Instagram, Facebook y X</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form-mini">
+          <h3>Envíanos un mensaje</h3>
+          <div id="contact-alert" class="alert"></div>
+          <div class="row-2">
+            <div class="input-group"><label>Nombre</label><input type="text" id="c-nom" placeholder="Tu nombre"></div>
+            <div class="input-group"><label>Correo</label><input type="email" id="c-email" placeholder="correo@ejemplo.com"></div>
+          </div>
+          <div class="input-group">
+            <label>Mensaje</label>
+            <textarea id="c-msg" rows="3" placeholder="¿En qué podemos ayudarte?" style="resize:vertical;"></textarea>
+          </div>
+          <button class="btn-primary btn-full" onclick="sendMsg()">Enviar mensaje ✉</button>
+        </div>
+      </div>
+
+      <!-- MAPA -->
+      <div class="company-map-side">
+        <p class="section-tag">UBICACIÓN</p>
+        <h3>Visítanos en Ciudad Juárez</h3>
+        <div id="company-map"></div>
+        <p class="map-addr">📍 Av. Tecnológico 6501, UACJ — Ciudad Juárez, Chih.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2026 <strong>AeroMexa</strong> — Ciudad Juárez, México | <a href="index.html">Inicio</a> · <a href="products.html">Vuelos</a> · info@aeromexa.mx</p>
+  </footer>
+
+  <script>
+    window.addEventListener('load', () => {
+      const map = L.map('company-map').setView([31.6905, -106.4222], 15);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution:'© OpenStreetMap © CARTO', maxZoom:19
+      }).addTo(map);
+      const icon = L.divIcon({
+        html:`<div style="width:34px;height:34px;background:linear-gradient(135deg,#c0392b,#e74c3c);border:3px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 4px 15px rgba(192,57,43,0.7)">✈</div>`,
+        iconSize:[34,34], iconAnchor:[17,17], className:''
+      });
+      L.marker([31.6905,-106.4222],{icon}).addTo(map)
+        .bindPopup('<strong style="color:#e74c3c">AeroMexa — Oficinas Centrales</strong><br><small>Av. Tecnológico 6501, UACJ<br>Ciudad Juárez, Chihuahua</small>')
+        .openPopup();
+    });
+
+    function sendMsg() {
+      const n=document.getElementById('c-nom').value;
+      const e=document.getElementById('c-email').value;
+      const m=document.getElementById('c-msg').value;
+      const a=document.getElementById('contact-alert');
+      if (!n||!e||!m) { a.className='alert alert-error show'; a.textContent='⚠ Completa todos los campos.'; return; }
+      a.className='alert alert-success show';
+      a.textContent=`✓ Mensaje enviado. ¡Gracias ${n}! Te responderemos pronto.`;
+      document.getElementById('c-nom').value='';
+      document.getElementById('c-email').value='';
+      document.getElementById('c-msg').value='';
+    }
+
+    function logout() { localStorage.removeItem('aeromexa_user'); window.location.href='index.html'; }
+  </script>
+</body>
+</html>

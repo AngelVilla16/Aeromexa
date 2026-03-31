@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrarse — AeroMexa</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="auth-body">
+
+  <div class="auth-wrap">
+    <div class="auth-visual">
+      <div class="auth-visual-photo" style="background-image: url('https://images.unsplash.com/photo-1503220317375-aaad61436b1b?w=1000')"></div>
+      <div class="auth-visual-body">
+        <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="auth-visual-logo">
+        <h2>"Únete a miles<br>de <em>viajeros</em><br>mexicanos."</h2>
+        <p>Crea tu cuenta gratuita y empieza a explorar los mejores vuelos con tarifas exclusivas para miembros AeroMexa.</p>
+        <ul class="auth-perks">
+          <li>Reservaciones rápidas y seguras</li>
+          <li>Alertas de precios en tus rutas favoritas</li>
+          <li>Historial de viajes centralizado</li>
+          <li>Soporte prioritario 24/7</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="auth-form-panel">
+      <div class="auth-form-inner">
+        <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="auth-form-logo">
+        <h1 class="auth-title">Crea tu <span>cuenta</span></h1>
+        <p class="auth-subtitle">Completa el formulario para registrarte</p>
+
+        <div id="alert-box" class="alert"></div>
+
+        <form id="register-form" method="POST" action="../../model/register.php">
+          <div class="row-2">
+            <div class="input-group">
+              <label>Nombre</label>
+              <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre">
+            </div>
+            <div class="input-group">
+              <label>Apellidos</label>
+              <input type="text" name="apellido" required placeholder="Apellidos">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Nombre de usuario</label>
+            <input type="text" name="usuario" required placeholder="viajero_mx">
+          </div>
+
+          <div class="input-group">
+            <label>Correo electrónico</label>
+            <input type="email" name="email" required placeholder="correo@ejemplo.com">
+          </div>
+
+          <div class="row-2">
+            <div class="input-group">
+              <label>Contraseña</label>
+              <div class="pwd-wrap">
+                <input type="password" id="pwd" name="password" required placeholder="Mín. 8 caracteres" oninput="checkStrength(this.value)">
+                <button type="button" class="pwd-toggle" onclick="togglePwd('pwd',this)">👁</button>
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Confirmar contraseña</label>
+              <div class="pwd-wrap">
+                <input type="password" id="pwd2" name="confirm_password" required placeholder="Repite contraseña">
+                <button type="button" class="pwd-toggle" onclick="togglePwd('pwd2',this)">👁</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="strength-wrap" id="strength-wrap">
+            <div class="strength-bar"><div class="strength-fill" id="s-fill"></div></div>
+            <span class="strength-label" id="s-label">Débil</span>
+          </div>
+
+          <label class="check-label" style="margin-bottom: 1.1rem; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: var(--gray-light);">
+            <input type="checkbox" name="terms" required style="margin-top: 2px; accent-color: var(--blue-bright);">
+            Acepto los <a href="#" style="color: var(--blue-light); font-weight: 700;">Términos y Condiciones</a> y la <a href="#" style="color: var(--blue-light); font-weight: 700;">Política de Privacidad</a>
+          </label>
+
+          <button type="submit" class="btn-primary btn-full" id="btn-reg">
+            <span id="btn-txt">Crear mi cuenta 🚀</span>
+            <span id="btn-load" style="display:none">⟳ Registrando...</span>
+          </button>
+        </form>
+
+        <hr class="divider">
+        <p class="switch-text">¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+        <a href="index.html" class="back-link">← Regresar al inicio</a>
+      </div>
+    </div>
+  </div>
+
+  
+</body>
+</html>

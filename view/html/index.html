@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroMexa — Vuelos en Línea</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="nav-logo-img">
+      <span class="nav-logo-text">Aero<span>Mexa</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Inicio</a></li>
+      <li><a href="register.html" class="nav-btn-outline">Registrarse</a></li>
+      <li><a href="login.html" class="nav-btn-solid">Iniciar Sesión</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-img"></div>
+    <div class="hero-gradient"></div>
+    <div class="cloud-bg"></div>
+
+    <div class="hero-content">
+      <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg"AeroMexa" class="hero-logo">
+      <p class="hero-badge">✈ La aerolínea digital de México</p>
+      <h1 class="hero-title">
+        VUELA<br>
+        <span class="sky">SIN</span><br>
+        <span class="red">LÍMITES</span>
+      </h1>
+      <p class="hero-subtitle">Reserva tus vuelos nacionales e internacionales con los mejores precios. Rápido, seguro y desde donde estés.</p>
+      <div class="hero-cta">
+        <a href="register.html" class="btn-primary">🚀 Empieza gratis</a>
+        <a href="login.html" class="btn-secondary">Ya tengo cuenta →</a>
+      </div>
+    </div>
+
+    <!-- SEARCH BOX -->
+    <div class="search-box">
+      <p class="search-box-title">✈ Busca tu vuelo ideal</p>
+      <div class="search-grid">
+        <div class="search-field">
+          <label>Origen</label>
+          <input type="text" id="origen" placeholder="Ciudad Juárez (CJS)">
+        </div>
+        <button class="swap-btn" onclick="swapCities()" title="Intercambiar">⇄</button>
+        <div class="search-field">
+          <label>Destino</label>
+          <input type="text" id="destino" placeholder="CDMX, Cancún, NY...">
+        </div>
+        <div class="search-field">
+          <label>Fecha de ida</label>
+          <input type="date" id="fecha-vuelo">
+        </div>
+        <div class="search-field">
+          <label>Pasajeros</label>
+          <select id="pasajeros">
+            <option>1 pasajero</option>
+            <option>2 pasajeros</option>
+            <option>3 pasajeros</option>
+            <option>4+ pasajeros</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="buscarVuelos()" style="padding: 0.72rem 1.5rem; font-size: 0.9rem; white-space: nowrap; align-self: end;">
+          Buscar
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESTINOS POPULARES -->
+  <section class="destinos-section">
+    <div>
+      <p class="section-tag">DESTINOS POPULARES</p>
+      <h2 class="section-title">¿A dónde quieres <span>volar</span>?</h2>
+      <p class="section-sub">Los destinos más buscados esta temporada</p>
+    </div>
+    <div class="destinos-grid">
+      <div class="destino-card" style="--img: url('https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=600')">
+        <div class="destino-overlay"></div>
+        <div class="destino-info">
+          <span class="destino-price">Desde $1,899 MXN</span>
+          <h3>Ciudad de México</h3>
+          <p>CDMX, México 🇲🇽</p>
+        </div>
+      </div>
+      <div class="destino-card" style="--img: url('https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=600')">
+        <div class="destino-overlay"></div>
+        <div class="destino-info">
+          <span class="destino-price">Desde $2,499 MXN</span>
+          <h3>Cancún</h3>
+          <p>Quintana Roo, México 🇲🇽</p>
+        </div>
+      </div>
+      <div class="destino-card" style="--img: url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600')">
+        <div class="destino-overlay"></div>
+        <div class="destino-info">
+          <span class="destino-price">Desde $8,900 MXN</span>
+          <h3>Nueva York</h3>
+          <p>Estados Unidos 🇺🇸</p>
+        </div>
+      </div>
+      <div class="destino-card" style="--img: url('https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=600')">
+        <div class="destino-overlay"></div>
+        <div class="destino-info">
+          <span class="destino-price">Desde $12,500 MXN</span>
+          <h3>Madrid</h3>
+          <p>España 🇪🇸</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFICIOS -->
+  <section class="beneficios-section">
+    <div class="beneficios-inner">
+      <div style="text-align: center; margin-bottom: 0.5rem;">
+        <p class="section-tag">¿POR QUÉ AEROMEXA?</p>
+        <h2 class="section-title">Vuela con <span>confianza</span></h2>
+      </div>
+      <div class="beneficios-grid">
+        <div class="beneficio-card">
+          <div class="beneficio-icon">✈</div>
+          <h3>50+ Rutas</h3>
+          <p>Vuelos nacionales e internacionales desde el norte de México al mundo.</p>
+        </div>
+        <div class="beneficio-card">
+          <div class="beneficio-icon">🔐</div>
+          <h3>Pago seguro</h3>
+          <p>Transacciones cifradas con los más altos estándares internacionales.</p>
+        </div>
+        <div class="beneficio-card">
+          <div class="beneficio-icon">🎒</div>
+          <h3>Equipaje incluido</h3>
+          <p>Maleta de mano en todos los boletos, sin cargos escondidos.</p>
+        </div>
+        <div class="beneficio-card">
+          <div class="beneficio-icon">🕐</div>
+          <h3>Soporte 24/7</h3>
+          <p>Asistencia disponible en cualquier hora, desde cualquier lugar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEÑAS -->
+  <section class="reviews-section">
+    <p class="section-tag">OPINIONES</p>
+    <h2 class="section-title">Lo que dicen nuestros <span>viajeros</span></h2>
+    <div class="reviews-grid">
+      <article class="review-card">
+        <div class="stars-rating">★★★★★</div>
+        <p class="review-text">"Compré mis boletos en minutos. La plataforma es increíblemente intuitiva y los precios son los mejores que encontré."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: var(--blue-sky);">C</div>
+          <div>
+            <strong>Carlos R.</strong>
+            <p>Ciudad de México</p>
+          </div>
+        </div>
+      </article>
+      <article class="review-card">
+        <div class="stars-rating">★★★★★</div>
+        <p class="review-text">"Encontré vuelos para temporada alta que no estaban en ningún otro lado. Definitivamente mi plataforma favorita."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: var(--red-mx);">S</div>
+          <div>
+            <strong>Sofía M.</strong>
+            <p>Guadalajara</p>
+          </div>
+        </div>
+      </article>
+      <article class="review-card">
+        <div class="stars-rating">★★★★★</div>
+        <p class="review-text">"El cambio de vuelo fue rapidísimo. Un servicio al cliente excepcional y muy humano. ¡Recomendado!"</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: var(--green-mx);">J</div>
+          <div>
+            <strong>Jorge A.</strong>
+            <p>Monterrey</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2026 <strong>AeroMexa</strong> — Ciudad Juárez, México |
+      <a href="about.html">Acerca de</a> ·
+      <a href="products.html">Vuelos</a> ·
+      Contacto: info@aeromexa.mx
+    </p>
+  </footer>
+
+  <script>
+    function swapCities() {
+      const o = document.getElementById('origen'), d = document.getElementById('destino');
+      [o.value, d.value] = [d.value, o.value];
+    }
+
+    function buscarVuelos() {
+      const destino = document.getElementById('destino').value.trim();
+      if (!destino) { document.getElementById('destino').focus(); return; }
+      window.location.href = 'products.html';
+    }
+
+    // Fecha mínima hoy
+    const fi = document.getElementById('fecha-vuelo');
+    if (fi) fi.min = new Date().toISOString().split('T')[0];
+  </script>
+</body>
+</html>

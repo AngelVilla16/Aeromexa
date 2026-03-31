@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión — AeroMexa</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="auth-body">
+
+  <div class="auth-wrap">
+    <!-- PANEL VISUAL -->
+    <div class="auth-visual">
+      <div class="auth-visual-photo" style="background-image: url('https://images.unsplash.com/photo-1540962351504-03099e0a754b?w=1000')"></div>
+      <div class="auth-visual-body">
+        <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="auth-visual-logo">
+        <h2>"Tu próxima<br><em>aventura</em><br>te espera."</h2>
+        <p>Inicia sesión para acceder a tus reservaciones, ver el clima de tu destino y descubrir los mejores vuelos disponibles hoy.</p>
+        <div class="auth-stats">
+          <div class="auth-stat">
+            <strong>50+</strong>
+            <span>Destinos</span>
+          </div>
+          <div class="auth-stat">
+            <strong>10K+</strong>
+            <span>Viajeros</span>
+          </div>
+          <div class="auth-stat">
+            <strong>4.9★</strong>
+            <span>Calificación</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL FORMULARIO -->
+    <div class="auth-form-panel">
+      <div class="auth-form-inner">
+        <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="auth-form-logo">
+        <h1 class="auth-title">Bienvenido de <span>vuelta</span></h1>
+        <p class="auth-subtitle">Ingresa tus credenciales para continuar</p>
+
+        <div id="alert-box" class="alert"></div>
+
+        <form id="login-form">
+          <div class="input-group">
+            <label>Correo o nombre de usuario</label>
+            <input type="text" id="username" name="username" required placeholder="ejemplo@correo.com">
+          </div>
+
+          <div class="input-group">
+            <label>Contraseña</label>
+            <div class="pwd-wrap">
+              <input type="password" id="password" name="password" required placeholder="••••••••">
+              <button type="button" class="pwd-toggle" onclick="togglePwd('password',this)">👁</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="check-label">
+              <input type="checkbox" name="remember">
+              Recordarme
+            </label>
+            <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <button type="submit" class="btn-primary btn-full" id="btn-login">
+            <span id="btn-txt">Iniciar Sesión ✈</span>
+            <span id="btn-load" style="display:none">⟳ Verificando...</span>
+          </button>
+        </form>
+
+        <hr class="divider">
+        <p class="switch-text">¿No tienes cuenta? <a href="register.html">Regístrate gratis</a></p>
+        <a href="index.html" class="back-link">← Regresar al inicio</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-login');
+      const txt = document.getElementById('btn-txt');
+      const load = document.getElementById('btn-load');
+      const alert = document.getElementById('alert-box');
+
+      btn.disabled = true;
+      txt.style.display = 'none';
+      load.style.display = 'inline';
+      alert.className = 'alert';
+
+      const body = new URLSearchParams(new FormData(this));
+
+      try {
+        const res = await fetch('/login', { method: 'POST', body });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem('aeromexa_user', data.user?.nombre || 'Viajero');
+          alert.className = 'alert alert-success show';
+          alert.textContent = '✓ ¡Bienvenido! Redirigiendo...';
+          setTimeout(() => window.location.href = 'dashboard.html', 1100);
+        } else {
+          showError(data.message || 'Credenciales incorrectas.');
+        }
+      } catch {
+        // Modo demo sin servidor
+        localStorage.setItem('aeromexa_user', 'Viajero');
+        alert.className = 'alert alert-success show';
+        alert.textContent = '✓ Modo demo activo. Entrando...';
+        setTimeout(() => window.location.href = 'dashboard.html', 1000);
+      }
+
+      function showError(msg) {
+        alert.className = 'alert alert-error show';
+        alert.textContent = '⚠ ' + msg;
+        btn.disabled = false;
+        txt.style.display = 'inline';
+        load.style.display = 'none';
+      }
+    });
+
+    function togglePwd(id, btn) {
+      const i = document.getElementById(id);
+      i.type = i.type === 'password' ? 'text' : 'password';
+      btn.textContent = i.type === 'password' ? '👁' : '🙈';
+    }
+  </script>
+</body>
+</html>

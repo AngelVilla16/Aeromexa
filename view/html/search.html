@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Búsqueda — AeroMexa</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="nav-logo-img">
+      <span class="nav-logo-text">Aero<span>Mexa</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="dashboard.html">Inicio</a></li>
+      <li><a href="search.html" class="active">Búsqueda</a></li>
+      <li><a href="products.html">Productos</a></li>
+      <li><a href="about.html">Acerca de</a></li>
+      <li><button onclick="logout()">Salir</button></li>
+    </ul>
+  </nav>
+
+  <div class="search-page">
+    <div class="search-controls-bar">
+      <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap; justify-content:space-between;">
+        <div>
+          <p class="section-tag" style="margin:0 0 0.2rem">BÚSQUEDA</p>
+          <h2 style="font-family:'Barlow Condensed',sans-serif; font-style:italic; font-size:1.3rem; font-weight:900; color: var(--white); margin:0;">
+            Encuentra lugares <span style="color:var(--red-bright)">cerca de ti</span>
+          </h2>
+        </div>
+        <div class="search-bar-row" style="flex:1; max-width:500px;">
+          <span>🔍</span>
+          <input type="text" id="search-input" placeholder="Busca aeropuertos, hoteles, restaurantes...">
+          <button class="btn-primary" onclick="searchPlaces()" style="padding: 0.45rem 1rem; font-size: 0.82rem;">Buscar</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <button class="chip active" onclick="filterPlaces('all',this)">🗺 Todos</button>
+        <button class="chip" onclick="filterPlaces('airport',this)">✈ Aeropuertos</button>
+        <button class="chip" onclick="filterPlaces('hotel',this)">🏨 Hoteles</button>
+        <button class="chip" onclick="filterPlaces('restaurant',this)">🍴 Restaurantes</button>
+        <button class="chip" onclick="filterPlaces('attraction',this)">🎯 Atracciones</button>
+      </div>
+    </div>
+
+    <div class="map-layout">
+      <div class="map-container">
+        <div id="map"></div>
+        <div class="map-my-loc-btn">
+          <button class="btn-primary" onclick="centerMe()" style="padding:0.55rem 1rem; font-size:0.82rem;">📍 Mi ubicación</button>
+        </div>
+        <div class="map-status" id="map-status">
+          <div class="loader-ring" style="width:18px;height:18px;border-width:2px;"></div>
+          <span>Detectando ubicación...</span>
+        </div>
+      </div>
+
+      <div class="places-panel">
+        <div class="places-hdr">
+          <h3>Lugares cercanos</h3>
+          <span class="places-count" id="places-count">0 resultados</span>
+        </div>
+        <div class="places-list" id="places-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let map, userMarker, markers = [];
+    let uLat = 31.6904, uLon = -106.4245;
+    let currentFilter = 'all';
+
+    const places = [
+      { name:'Aeropuerto Internacional Cd. Juárez', type:'airport', lat:31.6361, lon:-106.4287, dist:'6.2 km', icon:'✈', desc:'Abraham González — CJS' },
+      { name:'Aeropuerto Internacional El Paso', type:'airport', lat:31.8071, lon:-106.3799, dist:'12.4 km', icon:'✈', desc:'ELP — El Paso International' },
+      { name:'Hotel Camino Real Juárez', type:'hotel', lat:31.7214, lon:-106.4292, dist:'3.1 km', icon:'🏨', desc:'Hotel 5 estrellas — Centro' },
+      { name:'Hotel Lucerna Juárez', type:'hotel', lat:31.7102, lon:-106.4411, dist:'2.8 km', icon:'🏨', desc:'Confort premium en Juárez' },
+      { name:'Hotel Holiday Inn Express', type:'hotel', lat:31.7180, lon:-106.4220, dist:'1.9 km', icon:'🏨', desc:'Cerca del centro comercial' },
+      { name:'Restaurante La Cave', type:'restaurant', lat:31.7312, lon:-106.4523, dist:'4.5 km', icon:'🍴', desc:'Cocina internacional y vinos' },
+      { name:'Parque El Chamizal', type:'attraction', lat:31.7397, lon:-106.4756, dist:'5.0 km', icon:'🎯', desc:'Parque binacional fronterizo' },
+      { name:'Museo de la Revolución', type:'attraction', lat:31.7298, lon:-106.4850, dist:'5.8 km', icon:'🎯', desc:'Historia de la Frontera Norte' },
+    ];
+
+    function initMap(lat, lon) {
+      uLat = lat; uLon = lon;
+      map = L.map('map').setView([lat, lon], 13);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap © CARTO', maxZoom: 19
+      }).addTo(map);
+
+      const uIcon = L.divIcon({
+        html:`<div style="width:16px;height:16px;background:#2563c4;border:3px solid white;border-radius:50%;box-shadow:0 0 12px rgba(37,99,196,0.9)"></div>`,
+        iconSize:[16,16], iconAnchor:[8,8], className:''
+      });
+      userMarker = L.marker([lat, lon], {icon: uIcon}).addTo(map).bindPopup('<strong>📍 Tu ubicación</strong>').openPopup();
+      document.getElementById('map-status').style.display = 'none';
+      renderPlaces(places);
+    }
+
+    function renderPlaces(list) {
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+      const filtered = currentFilter === 'all' ? list : list.filter(p => p.type === currentFilter);
+      document.getElementById('places-count').textContent = filtered.length + ' resultados';
+      const el = document.getElementById('places-list');
+      el.innerHTML = '';
+      filtered.forEach((p, i) => {
+        const ico = L.divIcon({
+          html:`<div style="width:30px;height:30px;background:#0d2247;border:2px solid #2563c4;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px">${p.icon}</div>`,
+          iconSize:[30,30], iconAnchor:[15,15], className:''
+        });
+        const m = L.marker([p.lat, p.lon], {icon: ico}).addTo(map).bindPopup(`<strong>${p.name}</strong><br><small>${p.desc}</small><br><small>📏 ${p.dist}</small>`);
+        markers.push(m);
+
+        const card = document.createElement('div');
+        card.className = 'place-card';
+        card.innerHTML = `<div class="place-emoji">${p.icon}</div><div class="place-info"><h4>${p.name}</h4><p>${p.desc}</p><span class="place-dist">📏 ${p.dist}</span></div><button class="place-go" onclick="focus(${p.lat},${p.lon},${i})">Ver →</button>`;
+        el.appendChild(card);
+      });
+    }
+
+    window.focus = (lat, lon, i) => { map.flyTo([lat,lon],16,{duration:1}); if(markers[i]) markers[i].openPopup(); };
+
+    function filterPlaces(type, btn) {
+      currentFilter = type;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderPlaces(places);
+    }
+
+    function searchPlaces() {
+      const q = document.getElementById('search-input').value.toLowerCase().trim();
+      if (!q) return;
+      const r = places.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+      if (r.length) { renderPlaces(r); map.flyTo([r[0].lat, r[0].lon], 15, {duration:1}); }
+      else { document.getElementById('places-list').innerHTML = `<div style="text-align:center;padding:2rem;color:var(--gray-mid)"><p>Sin resultados para "<strong>${q}</strong>"</p></div>`; document.getElementById('places-count').textContent = '0 resultados'; }
+    }
+
+    function centerMe() { map.flyTo([uLat, uLon], 14, {duration:1}); userMarker.openPopup(); }
+    function logout() { localStorage.removeItem('aeromexa_user'); window.location.href = 'index.html'; }
+
+    document.getElementById('search-input').addEventListener('keydown', e => { if (e.key==='Enter') searchPlaces(); });
+
+    window.addEventListener('load', () => {
+      if (navigator.geolocation) navigator.geolocation.getCurrentPosition(p => initMap(p.coords.latitude, p.coords.longitude), () => initMap(uLat, uLon));
+      else initMap(uLat, uLon);
+    });
+  </script>
+</body>
+</html>

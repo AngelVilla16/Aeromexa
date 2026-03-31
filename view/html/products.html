@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vuelos — AeroMexa</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="nav-logo-img">
+      <span class="nav-logo-text">Aero<span>Mexa</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="dashboard.html">Inicio</a></li>
+      <li><a href="search.html">Búsqueda</a></li>
+      <li><a href="products.html" class="active">Productos</a></li>
+      <li><a href="about.html">Acerca de</a></li>
+      <li><button onclick="logout()">Salir</button></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="page-inner">
+      <div class="page-header">
+        <p class="section-tag">CATÁLOGO DE VUELOS</p>
+        <h1 class="section-title">Elige tu próximo <span>destino</span></h1>
+        <p class="section-sub">Selecciona un vuelo y reserva con pago seguro en minutos</p>
+      </div>
+
+      <div class="filter-row" style="margin-bottom:2rem;">
+        <button class="chip active" onclick="filter('all',this)">Todos</button>
+        <button class="chip" onclick="filter('nacional',this)">🇲🇽 Nacionales</button>
+        <button class="chip" onclick="filter('internacional',this)">🌎 Internacionales</button>
+        <button class="chip" onclick="filter('oferta',this)">🔥 Ofertas</button>
+      </div>
+
+      <div class="products-grid" id="products-grid"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal" style="display:none" onclick="closeModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closePayModal()">✕</button>
+
+      <div class="modal-step active" id="s1">
+        <h2 class="modal-title">Reservar vuelo ✈</h2>
+        <div class="modal-flight-summary" id="mfs"></div>
+        <div class="input-group">
+          <label>Número de pasajeros</label>
+          <select id="pass-num" onchange="updateTotal()">
+            <option value="1">1 pasajero</option>
+            <option value="2">2 pasajeros</option>
+            <option value="3">3 pasajeros</option>
+            <option value="4">4 pasajeros</option>
+          </select>
+        </div>
+        <div class="price-sum">
+          <div class="psum-row"><span>Precio por persona</span><span id="ps-unit">$0</span></div>
+          <div class="psum-row"><span>Pasajeros</span><span id="ps-pass">× 1</span></div>
+          <div class="psum-row"><strong>Total</strong><strong id="ps-total">$0 MXN</strong></div>
+        </div>
+        <button class="btn-primary btn-full" onclick="goStep('s2')">Continuar →</button>
+      </div>
+
+      <div class="modal-step" id="s2">
+        <h2 class="modal-title">Datos del pasajero</h2>
+        <div class="row-2">
+          <div class="input-group"><label>Nombre</label><input type="text" id="p-nom" placeholder="Como en tu pasaporte"></div>
+          <div class="input-group"><label>Apellidos</label><input type="text" id="p-ape" placeholder="Apellidos"></div>
+        </div>
+        <div class="input-group"><label>Correo electrónico</label><input type="email" id="p-email" placeholder="para@tu.boleto"></div>
+        <div class="input-group"><label>Teléfono</label><input type="tel" id="p-tel" placeholder="+52 614 000 0000"></div>
+        <div class="input-group"><label>Fecha de nacimiento</label><input type="date" id="p-nac"></div>
+        <div class="modal-btns">
+          <button class="btn-secondary" onclick="goStep('s1')">← Atrás</button>
+          <button class="btn-primary" onclick="goStep('s3')">Continuar →</button>
+        </div>
+      </div>
+
+      <div class="modal-step" id="s3">
+        <h2 class="modal-title">Método de pago</h2>
+        <div class="pay-methods">
+          <label class="pay-opt active" id="pm-card" onclick="selectPay('card')"><input type="radio" name="pm" value="card" checked><span>💳 Tarjeta de crédito / débito</span></label>
+          <label class="pay-opt" id="pm-oxxo" onclick="selectPay('oxxo')"><input type="radio" name="pm" value="oxxo"><span>🏪 Pago en OXXO</span></label>
+          <label class="pay-opt" id="pm-trans" onclick="selectPay('trans')"><input type="radio" name="pm" value="trans"><span>🏦 Transferencia bancaria</span></label>
+        </div>
+
+        <div id="card-form">
+          <div class="card-preview">
+            <div class="card-chip">⬛</div>
+            <p class="card-num-disp" id="c-num-disp">•••• •••• •••• ••••</p>
+            <div class="card-bottom">
+              <div><p class="card-lbl">Titular</p><p id="c-name-disp">NOMBRE APELLIDO</p></div>
+              <div><p class="card-lbl">Vence</p><p id="c-exp-disp">MM/AA</p></div>
+            </div>
+          </div>
+          <div class="input-group"><label>Número de tarjeta</label><input type="text" id="c-num" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this)"></div>
+          <div class="input-group"><label>Nombre del titular</label><input type="text" id="c-name" placeholder="COMO EN LA TARJETA" oninput="document.getElementById('c-name-disp').textContent=this.value.toUpperCase()||'NOMBRE APELLIDO'"></div>
+          <div class="row-2">
+            <div class="input-group"><label>Vencimiento</label><input type="text" id="c-exp" placeholder="MM/AA" maxlength="5" oninput="fmtExp(this)"></div>
+            <div class="input-group"><label>CVV</label><input type="password" id="c-cvv" placeholder="•••" maxlength="3"></div>
+          </div>
+        </div>
+
+        <div id="oxxo-info" style="display:none" class="pay-info-box">
+          <p>🏪 Pago en OXXO</p>
+          <p>Recibirás una referencia de pago por correo. Tienes 48 horas para pagar en cualquier sucursal OXXO de México.</p>
+        </div>
+
+        <div id="trans-info" style="display:none" class="pay-info-box">
+          <p>🏦 Transferencia bancaria</p>
+          <p>Banco: BBVA México<br>CLABE: 0124 0000 0123 4567 89<br>Referencia: <strong id="trans-ref">AERO-XXXX</strong></p>
+        </div>
+
+        <div class="modal-btns">
+          <button class="btn-secondary" onclick="goStep('s2')">← Atrás</button>
+          <button class="btn-primary" id="btn-pay" onclick="processPayment()">
+            <span id="pay-txt">Confirmar pago — <span id="pay-total-final"></span></span>
+            <span id="pay-load" style="display:none">⟳ Procesando...</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-step" id="s4">
+        <div class="confirm-wrap">
+          <div class="confirm-icon">✅</div>
+          <h2>¡Reservación confirmada!</h2>
+          <p class="confirm-msg">Tu boleto fue generado. Revisa tu correo para los detalles completos.</p>
+          <div class="confirm-detail" id="c-detail"></div>
+          <div class="booking-code">Código de reserva: <strong id="book-code"></strong></div>
+          <button class="btn-primary btn-full" onclick="closePayModal()" style="margin-top:1.5rem;">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 <strong>AeroMexa</strong> — Todos los derechos reservados</p>
+  </footer>
+
+  <script>
+    const flights = [
+      { id:1, type:'nacional', oferta:false, tag:'', from:'CJS', to:'MEX', fromC:'Cd. Juárez', toC:'Ciudad de México', dep:'06:30', arr:'08:45', dur:'2h 15min', airline:'AeroMexa Direct', price:1899, seats:12, img:'https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=600' },
+      { id:2, type:'nacional', oferta:true, tag:'🔥 Oferta', from:'CJS', to:'CUN', fromC:'Cd. Juárez', toC:'Cancún', dep:'08:00', arr:'12:30', dur:'4h 30min', airline:'AeroMexa Express', price:2499, seats:8, img:'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=600' },
+      { id:3, type:'internacional', oferta:false, tag:'Nuevo', from:'CJS', to:'JFK', fromC:'Cd. Juárez', toC:'Nueva York', dep:'14:20', arr:'22:00', dur:'7h 40min', airline:'AeroMexa International', price:8900, seats:5, img:'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600' },
+      { id:4, type:'internacional', oferta:true, tag:'🔥 Oferta', from:'CJS', to:'MAD', fromC:'Cd. Juárez', toC:'Madrid', dep:'22:00', arr:'16:30+1', dur:'12h 30min', airline:'AeroMexa International', price:12500, seats:3, img:'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=600' },
+      { id:5, type:'nacional', oferta:false, tag:'', from:'CJS', to:'GDL', fromC:'Cd. Juárez', toC:'Guadalajara', dep:'10:15', arr:'12:00', dur:'1h 45min', airline:'AeroMexa Direct', price:1599, seats:20, img:'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=600' },
+      { id:6, type:'internacional', oferta:false, tag:'', from:'CJS', to:'LAX', fromC:'Cd. Juárez', toC:'Los Ángeles', dep:'07:00', arr:'09:15', dur:'2h 15min', airline:'AeroMexa Express', price:4200, seats:15, img:'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=600' },
+    ];
+
+    let sel = null;
+
+    function render(list) {
+      document.getElementById('products-grid').innerHTML = list.map(f => `
+        <div class="flight-card">
+          <div class="flight-img-wrap" style="background-image:url('${f.img}')">
+            ${f.tag ? `<span class="flight-tag">${f.tag}</span>` : ''}
+            <div class="flight-iata">
+              <span class="iata-code">${f.from}</span>
+              <span class="iata-arrow">────✈────</span>
+              <span class="iata-code">${f.to}</span>
+            </div>
+          </div>
+          <div class="flight-body">
+            <div class="flight-header">
+              <div>
+                <h3>${f.fromC} → ${f.toC}</h3>
+                <p class="flight-airline">${f.airline}</p>
+              </div>
+              <div class="price-block">
+                <span class="price-from">Desde</span>
+                <strong class="price-amt">$${f.price.toLocaleString()}</strong>
+                <span class="price-cur">MXN</span>
+              </div>
+            </div>
+            <div class="flight-meta">
+              <div class="flight-meta-item"><span>🕐 Salida</span><strong>${f.dep}</strong></div>
+              <div class="flight-meta-item"><span>🛬 Llegada</span><strong>${f.arr}</strong></div>
+              <div class="flight-meta-item"><span>⏱ Duración</span><strong>${f.dur}</strong></div>
+              <div class="flight-meta-item"><span>💺 Asientos</span><strong class="${f.seats<=5?'seats-low':''}">${f.seats} disp.</strong></div>
+            </div>
+            <button class="btn-primary" onclick="openPay(${f.id})" style="width:100%;justify-content:center;padding:0.85rem;font-size:0.9rem;">
+              Reservar este vuelo →
+            </button>
+          </div>
+        </div>`).join('');
+    }
+
+    function filter(type, btn) {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      render(type==='all' ? flights : type==='oferta' ? flights.filter(f=>f.oferta) : flights.filter(f=>f.type===type));
+    }
+
+    function openPay(id) {
+      sel = flights.find(f => f.id===id);
+      document.getElementById('mfs').innerHTML = `
+        <div class="mfs-route">
+          <div class="mfs-city">${sel.fromC}<small>${sel.from}</small></div>
+          <div class="mfs-plane">✈</div>
+          <div class="mfs-city">${sel.toC}<small>${sel.to}</small></div>
+        </div>
+        <div class="mfs-details">
+          <span>${sel.dep} → ${sel.arr}</span>
+          <span>${sel.dur}</span>
+          <span>${sel.airline}</span>
+        </div>`;
+      document.getElementById('trans-ref').textContent = 'AERO-' + Math.random().toString(36).substr(2,6).toUpperCase();
+      updateTotal();
+      goStep('s1');
+      document.getElementById('modal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function updateTotal() {
+      const n = parseInt(document.getElementById('pass-num').value);
+      const t = sel.price * n;
+      document.getElementById('ps-unit').textContent = '$' + sel.price.toLocaleString();
+      document.getElementById('ps-pass').textContent = '× ' + n;
+      document.getElementById('ps-total').textContent = '$' + t.toLocaleString() + ' MXN';
+      document.getElementById('pay-total-final').textContent = '$' + t.toLocaleString() + ' MXN';
+    }
+
+    function goStep(id) {
+      document.querySelectorAll('.modal-step').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function selectPay(m) {
+      ['card','oxxo','trans'].forEach(x => {
+        document.getElementById('pm-'+x).classList.toggle('active', x===m);
+        const el = document.getElementById(x===('card') ? 'card-form' : x+'-info');
+        if (el) el.style.display = x===m ? 'block' : 'none';
+      });
+    }
+
+    function fmtCard(i) { let v=i.value.replace(/\D/g,'').substr(0,16); v=v.replace(/(.{4})/g,'$1 ').trim(); i.value=v; document.getElementById('c-num-disp').textContent=v||'•••• •••• •••• ••••'; }
+    function fmtExp(i)  { let v=i.value.replace(/\D/g,'').substr(0,4); if(v.length>=2) v=v.slice(0,2)+'/'+v.slice(2); i.value=v; document.getElementById('c-exp-disp').textContent=v||'MM/AA'; }
+
+    async function processPayment() {
+      const btn=document.getElementById('btn-pay');
+      const txt=document.getElementById('pay-txt');
+      const load=document.getElementById('pay-load');
+      btn.disabled=true; txt.style.display='none'; load.style.display='inline';
+      await new Promise(r=>setTimeout(r,2000));
+      const n=parseInt(document.getElementById('pass-num').value);
+      const t=sel.price*n;
+      const code='AM-'+Date.now().toString(36).toUpperCase().substr(-6);
+      document.getElementById('book-code').textContent=code;
+      document.getElementById('c-detail').innerHTML=`
+        <div class="cd-row"><span>Vuelo</span><strong>${sel.fromC} → ${sel.toC}</strong></div>
+        <div class="cd-row"><span>Pasajeros</span><strong>${n}</strong></div>
+        <div class="cd-row"><span>Salida</span><strong>${sel.dep}</strong></div>
+        <div class="cd-row"><span>Total pagado</span><strong>$${t.toLocaleString()} MXN</strong></div>`;
+      goStep('s4');
+      btn.disabled=false; txt.style.display='inline'; load.style.display='none';
+    }
+
+    function closePayModal() { document.getElementById('modal').style.display='none'; document.body.style.overflow=''; }
+    function closeModal(e)   { if(e.target===document.getElementById('modal')) closePayModal(); }
+    function logout()        { localStorage.removeItem('aeromexa_user'); window.location.href='index.html'; }
+
+    render(flights);
+  </script>
+</body>
+</html>

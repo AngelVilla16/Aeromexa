@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — AeroMexa</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="nav-logo-img">
+      <span class="nav-logo-text">Aero<span>Mexa</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="dashboard.html" class="active">Inicio</a></li>
+      <li><a href="search.html">Búsqueda</a></li>
+      <li><a href="products.html">Productos</a></li>
+      <li><a href="about.html">Acerca de</a></li>
+      <li><button onclick="logout()">Cerrar sesión</button></li>
+    </ul>
+  </nav>
+
+  <div class="dashboard-wrap">
+    <div class="dashboard-body">
+
+      <!-- GEO BANNER (oculto si ya se dio permiso) -->
+      <div class="geo-banner" id="geo-banner" style="display:none">
+        <div>
+          <strong>📍 Activa tu ubicación</strong>
+          <p>Para mostrarte el clima actual y los lugares cercanos a ti.</p>
+        </div>
+        <button class="btn-primary" onclick="requestGeo()" style="padding: 0.6rem 1.4rem; font-size: 0.85rem; white-space: nowrap;">
+          Permitir
+        </button>
+      </div>
+
+      <!-- BIENVENIDA + CLIMA -->
+      <div class="dash-welcome">
+        <div>
+          <p class="dash-hello-tag">Panel principal</p>
+          <h1 class="dash-title">Hola, <span id="user-name">Viajero</span> ✈</h1>
+          <p class="dash-sub">¿Listo para tu próxima aventura? Aquí tienes todo lo que necesitas.</p>
+        </div>
+
+        <!-- TARJETA CLIMA -->
+        <div class="weather-card">
+          <div class="weather-loader" id="w-loading">
+            <div class="loader-ring"></div>
+            <p>Obteniendo clima...</p>
+          </div>
+          <div id="w-content" style="display:none">
+            <div class="w-top">
+              <div>
+                <p class="w-city" id="w-city">Tu ciudad</p>
+                <p class="w-desc" id="w-desc">cargando</p>
+              </div>
+              <div class="w-icon" id="w-icon">🌤</div>
+            </div>
+            <p class="w-temp" id="w-temp">--°C</p>
+            <div class="w-details">
+              <div class="w-detail">
+                <span>💧</span>
+                <div><strong id="w-hum">--%</strong><p>Humedad</p></div>
+              </div>
+              <div class="w-detail">
+                <span>🌬</span>
+                <div><strong id="w-wind">--</strong><p>km/h</p></div>
+              </div>
+              <div class="w-detail">
+                <span>👁</span>
+                <div><strong id="w-vis">--</strong><p>km</p></div>
+              </div>
+            </div>
+            <p class="w-tip" id="w-tip"></p>
+          </div>
+          <div id="w-error" style="display:none" class="w-error">
+            <p>⚠ No se pudo obtener el clima</p>
+            <button class="btn-secondary" onclick="requestGeo()" style="padding:0.4rem 0.9rem; font-size:0.8rem; margin-top:0.5rem;">Reintentar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCESO RÁPIDO -->
+      <p class="quick-title">Acceso rápido</p>
+      <div class="quick-grid">
+        <a href="search.html" class="quick-card">
+          <div class="quick-icon">🗺</div>
+          <h3>Búsqueda y Mapa</h3>
+          <p>Explora el mapa interactivo y encuentra aeropuertos, hoteles y puntos de interés cerca de ti.</p>
+          <span class="quick-arrow">→</span>
+        </a>
+        <a href="products.html" class="quick-card featured">
+          <div class="quick-icon">✈</div>
+          <h3>Reservar Vuelo</h3>
+          <p>Catálogo completo de vuelos disponibles. Elige tu destino y paga de forma segura en minutos.</p>
+          <span class="quick-arrow">→</span>
+        </a>
+        <a href="about.html" class="quick-card">
+          <div class="quick-icon">🏢</div>
+          <h3>Acerca de AeroMexa</h3>
+          <p>Conoce nuestra historia, valores, equipo y cómo contactarnos en cualquier momento.</p>
+          <span class="quick-arrow">→</span>
+        </a>
+      </div>
+
+      <!-- RESERVACIONES -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.1rem;">
+        <p class="quick-title" style="margin:0">Mis reservaciones</p>
+        <a href="products.html" style="color: var(--blue-light); text-decoration:none; font-size:0.85rem; font-weight:700;">Ver vuelos →</a>
+      </div>
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>Sin reservaciones aún</h3>
+        <p>Haz tu primera reservación y aparecerá aquí.</p>
+        <a href="products.html" class="btn-primary" style="text-decoration:none; display:inline-flex; margin-top:1.1rem; padding:0.75rem 1.75rem;">
+          Explorar vuelos ✈
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 <strong>AeroMexa</strong> — Todos los derechos reservados</p>
+  </footer>
+
+  <script>
+    const OPENWEATHER_KEY = 'TU_API_KEY_AQUI'; // <-- Coloca tu API Key de OpenWeather aquí
+
+    document.getElementById('user-name').textContent = localStorage.getItem('aeromexa_user') || 'Viajero';
+
+    function requestGeo() {
+      document.getElementById('geo-banner').style.display = 'none';
+      navigator.geolocation.getCurrentPosition(
+        pos => fetchWeather(pos.coords.latitude, pos.coords.longitude),
+        ()  => fetchWeather(31.6904, -106.4245) // Fallback: Ciudad Juárez
+      );
+    }
+
+    async function fetchWeather(lat, lon) {
+      const loading = document.getElementById('w-loading');
+      const content = document.getElementById('w-content');
+      const error   = document.getElementById('w-error');
+      loading.style.display = 'flex'; content.style.display = 'none'; error.style.display = 'none';
+
+      try {
+        if (OPENWEATHER_KEY === 'TU_API_KEY_AQUI') throw new Error('demo');
+        const r = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_KEY}&units=metric&lang=es`);
+        const d = await r.json();
+        if (d.cod !== 200) throw new Error(d.message);
+        showWeather({ city: d.name + ', ' + d.sys.country, desc: d.weather[0].description, temp: Math.round(d.main.temp), hum: d.main.humidity, wind: Math.round(d.wind.speed * 3.6), vis: Math.round((d.visibility||10000)/1000), code: d.weather[0].id });
+      } catch {
+        showWeather({ city: 'Ciudad Juárez, MX', desc: 'cielo parcialmente nublado', temp: 24, hum: 35, wind: 18, vis: 10, code: 801 });
+      }
+    }
+
+    function showWeather(w) {
+      document.getElementById('w-loading').style.display = 'none';
+      document.getElementById('w-content').style.display = 'block';
+      document.getElementById('w-city').textContent = w.city;
+      document.getElementById('w-desc').textContent = w.desc.charAt(0).toUpperCase() + w.desc.slice(1);
+      document.getElementById('w-temp').textContent = w.temp + '°C';
+      document.getElementById('w-icon').textContent = icon(w.code);
+      document.getElementById('w-hum').textContent = w.hum + '%';
+      document.getElementById('w-wind').textContent = w.wind;
+      document.getElementById('w-vis').textContent = w.vis;
+      document.getElementById('w-tip').textContent =
+        w.temp < 10 ? ' Lleva abrigo, hace frío' :
+        w.temp < 20 ? ' Clima fresco, lleva chamarra' :
+        w.temp < 30 ? ' Buen clima para viajar' : ' Mucho calor — hidrátate bien';
+    }
+
+    function icon(c) {
+      if (c>=200&&c<300) return '⛈'; if (c>=300&&c<400) return '🌦';
+      if (c>=500&&c<600) return '🌧'; if (c>=600&&c<700) return '❄';
+      if (c>=700&&c<800) return '🌫'; if (c===800) return '☀'; return '⛅';
+    }
+
+    function logout() { localStorage.removeItem('aeromexa_user'); window.location.href = 'index.html'; }
+
+    // Al cargar: pedir ubicación automáticamente
+    window.addEventListener('load', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => fetchWeather(pos.coords.latitude, pos.coords.longitude),
+          () => { document.getElementById('geo-banner').style.display = 'flex'; document.getElementById('w-loading').style.display = 'none'; document.getElementById('w-error').style.display = 'block'; }
+        );
+      } else { fetchWeather(31.6904, -106.4245); }
+    });
+  </script>
+</body>
+</html>
