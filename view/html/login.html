@@ -42,10 +42,10 @@
 
         <div id="alert-box" class="alert"></div>
 
-        <form id="login-form">
+        <form id="login-form" method="POST" action="../../model/auth.php">
           <div class="input-group">
             <label>Correo o nombre de usuario</label>
-            <input type="text" id="username" name="username" required placeholder="ejemplo@correo.com">
+            <input type="text" id="username" name="correo" required placeholder="ejemplo@correo.com">
           </div>
 
           <div class="input-group">
@@ -77,54 +77,6 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById('login-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btn-login');
-      const txt = document.getElementById('btn-txt');
-      const load = document.getElementById('btn-load');
-      const alert = document.getElementById('alert-box');
-
-      btn.disabled = true;
-      txt.style.display = 'none';
-      load.style.display = 'inline';
-      alert.className = 'alert';
-
-      const body = new URLSearchParams(new FormData(this));
-
-      try {
-        const res = await fetch('/login', { method: 'POST', body });
-        const data = await res.json();
-        if (data.success) {
-          localStorage.setItem('aeromexa_user', data.user?.nombre || 'Viajero');
-          alert.className = 'alert alert-success show';
-          alert.textContent = '✓ ¡Bienvenido! Redirigiendo...';
-          setTimeout(() => window.location.href = 'dashboard.html', 1100);
-        } else {
-          showError(data.message || 'Credenciales incorrectas.');
-        }
-      } catch {
-        // Modo demo sin servidor
-        localStorage.setItem('aeromexa_user', 'Viajero');
-        alert.className = 'alert alert-success show';
-        alert.textContent = '✓ Modo demo activo. Entrando...';
-        setTimeout(() => window.location.href = 'dashboard.html', 1000);
-      }
-
-      function showError(msg) {
-        alert.className = 'alert alert-error show';
-        alert.textContent = '⚠ ' + msg;
-        btn.disabled = false;
-        txt.style.display = 'inline';
-        load.style.display = 'none';
-      }
-    });
-
-    function togglePwd(id, btn) {
-      const i = document.getElementById(id);
-      i.type = i.type === 'password' ? 'text' : 'password';
-      btn.textContent = i.type === 'password' ? '👁' : '🙈';
-    }
-  </script>
+  
 </body>
 </html>
