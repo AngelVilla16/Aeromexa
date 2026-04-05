@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if(!isset($session["correo"])){
+  header("Location: login.html");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

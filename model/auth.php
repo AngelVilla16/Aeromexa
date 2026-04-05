@@ -2,52 +2,57 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-require_once '../controller/conexion.php';
 session_start();
 
-$correo = $_POST['correo'];
-$pass = $_POST['password'];
+require_once '../controller/conexion.php';
 
- function validar($correo){
-    $con = new Conexion();
-    $pdo = $con->getConexion();
+$db_conexion = new Conexion();
+$pdo = $db_conexion->getConexion();
 
-    $stmt = $pdo->prepare("SELECT correo, usuario FROM usuarios WHERE correo = ? OR usuario = ?");
-    $stmt->execute([$correo,$correo]);
-    $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if(!$resultado){
-        echo "<script>
-        alert('El usuario o correo es incorrecto o no se encuentra registrado');
+if(isset($_POST['correo']) && isset($_POST['password'])){
+     function validate($data){
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+}
+$correo = validate($_POST['correo']);
+$pass = validate($_POST['password']);
+$user = validate($_POST['correo']);
+
+$stmt = $pdo->prepare("SELECT id_usuario, nombre, apellido, usuario, correo, cont FROM usuarios WHERE correo = ? OR usuario = ?");
+$stmt->execute([$correo,$user]);
+
+$datos = $stmt->fetch(PDO::FETCH_ASSOC);
+if(!$datos){
+    echo "
+        <script>
+        alert('Usuario no existente o incorrecto');
         window.location.href = '../view/html/login.html';
         </script>
-        ";
+    ";
+}
+if($datos){
+    $hash = $datos['cont'];
+    if(password_verify($pass, $hash)){
+        $_SESSION["id"] = $datos['id_usuario'];
+        $_SESSION["nombre"] = $datos['nombre'];
+        $_SESSION["apellido"] = $datos['apellido'];
+        $_SESSION["usuario"] = $datos['usuario'];
+        $_SESSION["correo"] = $datos['correo'];
+
+        header("Location: ../view/html/index.html");
         exit();
     }
-}
-function validarpass($correo, $pass){
-    $con = new Conexion();
-    $pdo = $con->getConexion();
-
-    $stmt = $pdo->prepare("SELECT cont FROM usuarios WHERE correo = ? OR usuario = ?");
-    $stmt->execute([$correo, $correo]);
-
-    $resultado = $stmt->fetchColumn();
-
-    if(!password_verify($pass, $resultado)){
-         echo "<script>
+    else{
+        echo "
+        <script>
         alert('Contraseña incorrecta');
         window.location.href = '../view/html/login.html';
         </script>
-        ";
-        exit();
+    ";
     }
 }
-validar($correo);
-validarpass($correo,$pass);
-
-echo "<script>
-window.location.href = '../view/html/index.html';
-</script>
-";
+}
 
 ?>
