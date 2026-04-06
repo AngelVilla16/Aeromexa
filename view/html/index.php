@@ -1,3 +1,16 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+session_start();
+
+$id = $_SESSION["id"] ?? null;
+$correo = $_SESSION["correo"] ?? null;
+$user = $_SESSION["usuario"] ?? null;
+$nombre = $_SESSION["nombre"] ?? null;
+$apellido = $_SESSION["apellido"] ?? null;
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,14 +23,19 @@
 
   <!-- NAVBAR -->
   <nav class="navbar">
-    <a href="index.html" class="nav-brand">
+    <a href="index.php" class="nav-brand">
       <img src="WhatsApp Image 2026-03-31 at 12.12.25 PM.jpeg" alt="AeroMexa" class="nav-logo-img">
       <span class="nav-logo-text">Aero<span>Mexa</span></span>
     </a>
     <ul class="nav-links">
-      <li><a href="index.html" class="active">Inicio</a></li>
-      <li><a href="register.html" class="nav-btn-outline">Registrarse</a></li>
-      <li><a href="login.html" class="nav-btn-solid">Iniciar Sesión</a></li>
+      <li><a href="index.php" class="active">Inicio</a></li>
+     <?php if(isset($_SESSION["correo"]) || isset($_SESSION["usuario"])): ?>
+      <li> <h1 class="bienvenida">Bienvenido: </h1> <p class="user"> <?php  echo $user ?></p></li>
+      <li><a href="../../model/logout.php"> Cerrar sesión</a></li>
+      <?php else: ?>
+        <li><a href="login.html"> Iniciar sesión </a></li>
+        <li><a href="register.html"> Registrarse</a></li>
+        <?php  endif;?>
     </ul>
   </nav>
 
@@ -209,7 +227,7 @@
     function buscarVuelos() {
       const destino = document.getElementById('destino').value.trim();
       if (!destino) { document.getElementById('destino').focus(); return; }
-      window.location.href = 'products.html';
+      window.location.href = 'products.php';
     }
 
     // Fecha mínima hoy

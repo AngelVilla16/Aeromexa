@@ -106,7 +106,20 @@ body {
   gap: 0.25rem;
   align-items: center;
 }
-
+.bienvenida{
+  color: var(--gray-light);
+  text-decoration: none;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+.user{
+  color: var(--gray-light);
+  text-decoration: none;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
 .nav-links a,
 .nav-links button {
   color: var(--gray-light);

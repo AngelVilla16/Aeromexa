@@ -1,6 +1,5 @@
 <?php
 ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
 
@@ -32,16 +31,17 @@ if(!$datos){
         </script>
     ";
 }
-if($datos){
+else{
     $hash = $datos['cont'];
     if(password_verify($pass, $hash)){
         $_SESSION["id"] = $datos['id_usuario'];
         $_SESSION["nombre"] = $datos['nombre'];
         $_SESSION["apellido"] = $datos['apellido'];
         $_SESSION["usuario"] = $datos['usuario'];
+       
         $_SESSION["correo"] = $datos['correo'];
 
-        header("Location: ../view/html/index.html");
+        header("Location: http://localhost/aeromexa/view/html/index.php");
         exit();
     }
     else{

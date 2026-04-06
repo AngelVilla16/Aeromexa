@@ -1,9 +1,17 @@
 <?php
 session_start();
 
-if(!isset($session["correo"])){
+if(!isset($_SESSION["correo"])){
   header("Location: login.html");
+  exit();
 }
+$id = $_SESSION["id"];
+  $correo = $_SESSION["correo"];
+  $user = $_SESSION["usuario"];
+  $nombre = $_SESSION["nombre"];
+  $apellido = $_SESSION["apellido"];
+
+
 ?>
 
 <!DOCTYPE html>
@@ -269,7 +277,7 @@ if(!isset($session["correo"])){
 
     function closePayModal() { document.getElementById('modal').style.display='none'; document.body.style.overflow=''; }
     function closeModal(e)   { if(e.target===document.getElementById('modal')) closePayModal(); }
-    function logout()        { localStorage.removeItem('aeromexa_user'); window.location.href='index.html'; }
+    function logout()        { localStorage.removeItem('aeromexa_user'); window.location.href='index.php'; }
 
     render(flights);
   </script>
